@@ -1,11 +1,10 @@
-
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "file/downloader/version"
+require "file_downloader/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "file-downloader"
-  spec.version       = File::Downloader::VERSION
+  spec.version       = FileDownloader::VERSION
   spec.authors       = ["sukechannnn"]
   spec.email         = ["wonderfulworld0315@gmail.com"]
 

@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "file/downloader"
+require "file_downloader"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

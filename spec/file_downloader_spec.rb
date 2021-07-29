@@ -1,6 +1,6 @@
-RSpec.describe File::Downloader do
+RSpec.describe FileDownloader do
   it "has a version number" do
-    expect(File::Downloader::VERSION).not_to be nil
+    expect(FileDownloader::VERSION).not_to be nil
   end
 
   it "does something useful" do
