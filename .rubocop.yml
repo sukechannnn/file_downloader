@@ -1,0 +1,241 @@
+require:
+  - rubocop-rspec
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 3.1
+
+  NewCops: enable
+  SuggestExtensions: false
+
+  Exclude:
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'db/schema.rb'
+    - 'config/**/*'
+    - 'bin/*'
+    - 'lib/capistrano/**/*'
+    - 'tmp/**/*'
+    # rspec が書き出しているファイルなので無視
+    - 'spec/spec_helper.rb'
+    # guard が書き出したファイルが元なので無視する
+    - Guardfile
+    # annotate が書き出したファイル
+    - 'lib/tasks/auto_annotate_models.rake'
+  DisplayCopNames: true
+
+#################### Layout ################################
+
+# .の位置指定、テストの.to hogehogeも見られてしまう
+Layout/DotPosition:
+  Enabled: false
+
+# ガード条件の後ろに空行を入れるか？
+# rubocop の趣味には追随しない
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+# メソッドを1列で完結させるかマルチラインにするか？
+# whereとかマルチラインになることが多いメソッドをチェックしている
+# ライン文字数で代替可能な気がする
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Layout/LineLength:
+  Enabled: false
+
+#################### Lint ################################
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*'
+
+##################### Metrics ##################################
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+#################### Naming ################################
+
+# 変数名3文字未満とか無理があるよ
+# e.g. (_, db, x, y, e, i, n, ...)
+Naming/MethodParameterName:
+  Enabled: false
+
+##################### RSpec ##################################
+
+# RSpec の `context do` を許可するかどうか
+# デフォルトだと `context '' do` にする必要があるが、ここは許可している
+RSpec/MissingExampleGroupArgument:
+  Enabled: false
+
+# `allow_any_instance_of` を許可するかどうか
+# 仕方ない場合もあるので許可している
+RSpec/AnyInstance:
+  Enabled: false
+
+# `when` or `with` でしか context を書き始められなくする設定
+# 日本語を使っている上では無理がある
+RSpec/ContextWording:
+  Enabled: false
+
+# `described_class.do_something` という書き方を強制するもの
+# 直接クラス名を書いた方が (`MyClass.do_something`) 分かりやすいと思うのでオフにしている
+RSpec/DescribedClass:
+  Enabled: false
+
+# 使っていないテストケースがある都合で検出されている。対処はしたいが、一旦オフにしている
+RSpec/EmptyExampleGroup:
+  Enabled: false
+
+# 縦に長いテストを書かざるをえないこともあるので、オフにしている
+RSpec/ExampleLength:
+  Enabled: false
+
+# `change` などで Ruby のブロックのスタイルを使う
+# この方が見やすいと話して決めた
+RSpec/ExpectChange:
+  EnforcedStyle: block
+
+RSpec/FilePath:
+  Enabled: false
+
+# `let!` を許可している
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MessageChain:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+# 一つの it の中に複数の expect を許可している
+RSpec/MultipleExpectations:
+  Enabled: false
+
+# subject に名前を付ける必要性を感じていない
+# むしろテスト対象以外を subject に書かない方が良いのでは
+RSpec/NamedSubject:
+  Enabled: false
+
+# 細かく context を分ける必要があることもあるので緩めている
+RSpec/NestedGroups:
+  Max: 5
+
+# 現状だと Symbol で統一されているが、そちらのオプションがないため disable にしておく
+RSpec/SharedExamples:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+##################### Style ##################################
+
+# 日本語コメントを許可する
+Style/AsciiComments:
+  Enabled: false
+
+# 自動読み込みとコンフリクトすることがあるので、出来れば compact は避けたい
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Style/ClassCheck:
+  EnforcedStyle: kind_of?
+
+# 見やすさを優先したいこともあるので無効化
+Style/ConditionalAssignment:
+  Enabled: false
+
+# クラスの頭にドキュメンテーションコメントがあるかのチェック
+# falseで任意に
+Style/Documentation:
+  Enabled: false
+
+# 書式付き文字列の指定、パーセント指定にした
+Style/FormatString:
+  EnforcedStyle: percent
+
+Style/FormatStringToken:
+  # 要ります？そんなに必要性を感じていない。この辺りは話してみたい
+  Enabled: false
+
+# `# -*- frozen_string_literal: true -*-`的なコメントが無いよというエラー
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GuardClause:
+  MinBodyLength: 5
+
+Style/IfUnlessModifier:
+  # 条件式を目立たせたい場合もあるので
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/NumericLiteralPrefix:
+  # 見慣れない文字なので戸惑う
+  Enabled: false
+
+# 桁数の大きい整数を_で区切るかどうか
+Style/NumericLiterals:
+  MinDigits: 7
+  Strict: true
+
+# Error.new(obj)を使いたいので無効化
+Style/RaiseArgs:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/RescueStandardError:
+  # さすがに StandardError は無指定でよいでしょう
+  EnforcedStyle: implicit
+
+# 文字列はバッククォートかシングルクォートか
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/SymbolArray:
+  # 場合によってはコードが分かりにくくなるので無効化
+  Enabled: false
+
+# メソッド引数の末尾カンマをどうするか
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+# %w で囲むかどうかはどっちでも良いと思う。
+Style/WordArray:
+  Enabled: false

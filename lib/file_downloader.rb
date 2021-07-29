@@ -1,4 +1,4 @@
-require "file_downloader/version"
+require 'file_downloader/version'
 
 module FileDownloader
   class Error < StandardError; end
