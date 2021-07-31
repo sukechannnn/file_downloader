@@ -1,6 +1,8 @@
 require 'file_downloader/version'
+require 'file_downloader/service'
 
 module FileDownloader
-  class Error < StandardError; end
-  # Your code goes here...
+  def self.download(url:, filepath:)
+    Service.new(url, filepath).execute
+  end
 end
