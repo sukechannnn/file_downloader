@@ -3,6 +3,11 @@ set -euo pipefail
 IFS=$'\n\t'
 set -vx
 
+DIR="tmp"
+if [ ! -d $DIR ]; then
+  mkdir $DIR
+fi
 bundle install
+bundle exec rspec
 
 # Do any other automated setup that you need to do here
