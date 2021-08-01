@@ -2,8 +2,8 @@ require 'file_downloader/status'
 require 'logger'
 
 module FileDownloader
+  class NotEofError < StandardError; end
   class Service
-    class NotEofError < StandardError; end
 
     def initialize(url, filepath, logger: nil)
       @url = url
