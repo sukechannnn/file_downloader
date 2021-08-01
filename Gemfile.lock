@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    file-downloader (0.1.0)
+    file_downloader (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -65,7 +65,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
-  file-downloader!
+  file_downloader!
   pry
   rake
   rspec
