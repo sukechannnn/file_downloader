@@ -1,48 +1,62 @@
+require 'file_downloader/status'
+require 'logger'
+
 module FileDownloader
   class Service
     class NotEofError < StandardError; end
 
-    def initialize(url, filepath)
+    def initialize(url, filepath, logger: nil)
       @url = url
       @filepath = filepath
       @retry_count = 0
+      @logger = logger || Logger.new($stdout)
     end
 
     def execute
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
 
-      http.use_ssl = true if uri.port == 443
-
-      header = http.head(uri.request_uri).to_hash
-      content_length = header['content-length'][0]
-
-      file = File.open(filepath, 'wb')
-
-      retry_on_error do
-        http.get(uri.request_uri, 'range' => "bytes=#{file.size}-#{content_length}") do |bytes|
-          file << bytes
-        end
-        raise NotEofError unless file.size == content_length.to_i
-      end
+      content_length = fetch_content_length(http, uri)
+      download_file(http, uri, content_length)
       filepath
-    ensure
-      file&.close
     end
 
     private
 
-    attr_reader :url, :filepath
+    attr_reader :url, :filepath, :logger
+
+    def fetch_content_length(http, uri)
+      http.use_ssl = true if uri.port == 443
+
+      res = http.head(uri.request_uri)
+      Status.check(res.code)
+      header = res.to_hash
+      header['content-length'][0]
+    end
+
+    def download_file(http, uri, content_length)
+      file = File.open(filepath, 'wb')
+
+      retry_on_error do
+        res = http.get(uri.request_uri, 'range' => "bytes=#{file.size}-#{content_length}") do |bytes|
+          file << bytes
+        end
+        Status.check(res.code)
+        raise NotEofError unless file.size == content_length.to_i
+      end
+    ensure
+      file&.close
+    end
 
     def retry_on_error(times: 10)
       @retry_count += 1
       yield
     rescue NotEofError
       if @retry_count < times
-        Rails.logger.info "Connection closed: #{@retry_count} time retry"
+        logger.info "Connection closed: #{@retry_count} time retry"
         retry
       else
-        Rails.logger.error 'Connection closed'
+        logger.error 'Connection closed'
         raise
       end
     end
