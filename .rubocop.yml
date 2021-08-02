@@ -26,6 +26,9 @@ AllCops:
 
 #################### Layout ################################
 
+Layout/EmptyLineBetweenDefs:
+  Enabled: false
+
 # .の位置指定、テストの.to hogehogeも見られてしまう
 Layout/DotPosition:
   Enabled: false
@@ -152,6 +155,9 @@ RSpec/SharedExamples:
   Enabled: false
 
 RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
   Enabled: false
 
 ##################### Style ##################################
