@@ -1,5 +1,3 @@
-require 'pry'
-
 RSpec.describe FileDownloader do
   subject { FileDownloader.download(url: file_url, filepath: 'tmp/downloaded_file.csv') }
 
@@ -33,7 +31,7 @@ RSpec.describe FileDownloader do
       end
     end
 
-    context 'when connection interrupted once when downloading' do
+    context 'when connection interrupted once while downloading' do
       let(:fragment1) { File.read('spec/fixtures/test_file_fragment1.csv') }
       let(:fragment2) { File.read('spec/fixtures/test_file_fragment2.csv') }
 
@@ -89,6 +87,30 @@ RSpec.describe FileDownloader do
       it 'raises FileDownloader::NotEofError' do
         expect { subject }.to raise_error(FileDownloader::NotEofError)
       end
+    end
+  end
+
+  context 'Content-Length: 0' do
+    let!(:stub_check_filesize) do
+      stub_request(:head, file_url)
+      .to_return(
+        status: 200,
+        body: '',
+        headers: { 'Content-Type' => 'text/csv', 'Content-Length' => 0 },
+      )
+    end
+
+    let!(:stub_download_file) do
+      stub_request(:get, file_url)
+      .to_return(
+        status: 200,
+        body: '',
+        headers: { 'Content-Type' => 'text/csv', 'Content-Length' => 0 },
+      )
+    end
+
+    it 'raises FileDownloader::NoResponseBodyError' do
+      expect { subject }.to raise_error(FileDownloader::NoResponseBodyError)
     end
   end
 

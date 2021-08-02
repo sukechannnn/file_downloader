@@ -2,9 +2,10 @@ require 'file_downloader/status'
 require 'logger'
 
 module FileDownloader
+  class NoResponseBodyError < StandardError; end
   class NotEofError < StandardError; end
-  class Service
 
+  class Service
     def initialize(url, filepath, logger: nil)
       @url = url
       @filepath = filepath
@@ -17,6 +18,7 @@ module FileDownloader
       http = Net::HTTP.new(uri.host, uri.port)
 
       content_length = fetch_content_length(http, uri)
+      raise NoResponseBodyError if content_length.to_i.zero?
       download_file(http, uri, content_length)
       filepath
     end
