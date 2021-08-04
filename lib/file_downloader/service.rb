@@ -1,4 +1,5 @@
 require 'file_downloader/status'
+require 'net/http'
 require 'logger'
 
 module FileDownloader
