@@ -1,0 +1,24 @@
+---
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        os: [ubuntu, macos]
+        ruby: [3.0, 2.7, 2.6]
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Install dependencies
+        run: bundle install
+      - name: Run Rubocop
+        run:  bundle exec rubocop
+      - name: Run tests
+        run: bundle exec rspec

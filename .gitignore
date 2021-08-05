@@ -5,7 +5,8 @@
 /doc/
 /pkg/
 /spec/reports/
-/tmp/
+/tmp/*
+!/tmp/.keep
 *.gem
 
 # rspec failure tracking
