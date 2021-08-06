@@ -154,4 +154,45 @@ RSpec.describe FileDownloader do
       end
     end
   end
+
+  context '5xx' do
+    context 'when `head` access returns 404' do
+      let!(:stub_check_filesize) do
+        stub_request(:head, file_url)
+        .to_return(
+          status: 500,
+          body: '',
+          headers: { 'Content-Type' => 'text/csv', 'Content-Length' => download_filesize },
+        )
+      end
+
+      it 'raises ServerError' do
+        expect { subject }.to raise_error(ServerError)
+      end
+    end
+
+    context 'when `get` access returns 500' do
+      let!(:stub_check_filesize) do
+        stub_request(:head, file_url)
+          .to_return(
+            status: 200,
+            body: '',
+            headers: { 'Content-Type' => 'text/csv', 'Content-Length' => download_filesize },
+          )
+      end
+
+      let!(:stub_download_file) do
+        stub_request(:get, file_url)
+          .to_return(
+            status: 500,
+            body: 'NotFound',
+            headers: { 'Content-Type' => 'text/csv', 'Content-Length' => download_filesize },
+          )
+      end
+
+      it 'raises ServerError' do
+        expect { subject }.to raise_error(ServerError)
+      end
+    end
+  end
 end
